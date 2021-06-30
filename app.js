@@ -3,7 +3,7 @@ let userScore = 0;
 let computerScore = 0;
 const userScore_span = document.getElementById("user-score");
 const computerScore_span = document.getElementById("computer-score");
-const scoreBoard_div = document.querySelector("score-board");
+const scoreBoard_div = document.querySelector(".score-board");
 const result_p = document.querySelector(".result > p");
 const rock_div = document.getElementById("r");
 const paper_div = document.getElementById("p");
@@ -25,6 +25,7 @@ function convertToWord(letter) {
 
 //If player wins round, their score goes up by one point, text displays winning move, scoreboard updated, and player selection gets green highlight
 function win(userChoice, computerChoice) {
+    if (userScore <= 3) {
     const smallUserWord = "user".fontsize(3).sub();
     const smallCompWord = "comp".fontsize(3).sub();
     const userChoice_div = document.getElementById(userChoice);
@@ -34,10 +35,18 @@ function win(userChoice, computerChoice) {
     result_p.innerHTML = `${convertToWord(userChoice)}${smallUserWord} beats ${convertToWord(computerChoice)}${smallCompWord}. You win!`;
     userChoice_div.classList.add('green-glow');
     setTimeout(() => userChoice_div.classList.remove('green-glow'), 400);
+    } else if (userScore === 4) {
+    userScore++
+    userScore_span.innerHTML = userScore;
+    computerScore_span.innerHTML = computerScore;
+    result_p.innerHTML = "Congratulations, you won! Refresh to play again"
+    endGame(); 
+    }
 }
 
 //If player loses round, computer score goes up by one point, text displays winning move, scoreboard updated, and player selection gets red highlight
 function lose(userChoice, computerChoice) {
+    if (computerScore <= 3) {
     const smallUserWord = "user".fontsize(3).sub();
     const smallCompWord = "comp".fontsize(3).sub();
     const userChoice_div = document.getElementById(userChoice);
@@ -47,6 +56,13 @@ function lose(userChoice, computerChoice) {
     result_p.innerHTML = `${convertToWord(computerChoice)}${smallCompWord} beats ${convertToWord(userChoice)}${smallUserWord}. You lose!`;
     userChoice_div.classList.add('red-glow');
     setTimeout(() => userChoice_div.classList.remove('red-glow'), 400);
+    } else if (computerScore === 4) {
+    computerScore++
+    userScore_span.innerHTML = userScore;
+    computerScore_span.innerHTML = computerScore;
+    result_p.innerHTML = "Game over, you lose! Refresh to play again"
+    endGame();
+    }
 }
 
 //If round is a tie, text displays tying moves, scoreboard remains the same, and player selection gets gray highlight
@@ -60,6 +76,11 @@ function draw(userChoice, computerChoice) {
     userChoice_div.classList.add('gray-glow');
     setTimeout(() => userChoice_div.classList.remove('gray-glow'), 400);
 }
+
+function endGame() {
+    userScore = 0;
+    computerScore = 0;
+  }
 
 //Game logic listing winning, losing, and tying scenarios
 function game(userChoice) {
@@ -85,9 +106,9 @@ function game(userChoice) {
 
 //Event listeners that initiate the functions once a player clicks on an icon and starts the round
 function main() {
-rock_div.addEventListener('click', () => game("r"));
-paper_div.addEventListener('click', () => game("p"));
-scissors_div.addEventListener('click', () => game("s"));
+    rock_div.addEventListener('click', () => game("r"));
+    paper_div.addEventListener('click', () => game("p"));
+    scissors_div.addEventListener('click', () => game("s"));
 }
 
 main();
